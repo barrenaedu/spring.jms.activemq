@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Properties files -->
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <!-- JMS Configuration -->
+    <bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <constructor-arg index="0" value="${jms.broker.url}"/>
+    </bean>
+
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <constructor-arg ref="amqConnectionFactory"/>
+        <property name="clientId" value="${jms.topic.client-id}"/>
+
+    </bean>
+
+    <!-- JMS Queue listener configuration -->
+    <bean id="queueMessageReceiver" class="spring.jms.queue.QueueReceiver"/>
+
+    <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destinationName" value="${jms.queue.name}"/>
+        <property name="messageListener" ref="queueMessageReceiver"/>
+        <!-- Queue mode -->
+        <property name="pubSubDomain" value="false"/>
+    </bean>
+
+    <!-- JMS Topic listener configuration -->
+    <bean id="topicMessageReceiver" class="spring.jms.topic.TopicReceiver"/>
+
+    <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destinationName" value="${jms.topic.name}"/>
+        <property name="messageListener" ref="topicMessageReceiver"/>
+        <property name="concurrentConsumers" value="1"/>
+        <!-- Topic mode -->
+        <property name="pubSubDomain" value="true"/>
+        <!-- Durable topic -->
+        <property name="subscriptionDurable" value="true"/>
+        <property name="clientId" value="${jms.topic.client-id}"/>
+        <property name="durableSubscriptionName" value="${jms.topic.subscription-name}"/>
+    </bean>
+
+</beans>
