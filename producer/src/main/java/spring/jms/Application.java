@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
 import spring.jms.queue.QueueProducer;
-import spring.jms.topic.TopicProducer;
+import spring.jms.topic.TopicPublisher;
 
 @SpringBootApplication
 @ImportResource("classpath:spring-config.xml")
@@ -18,9 +18,9 @@ public class Application {
         QueueProducer queueProducer = context.getBean(QueueProducer.class);
         queueProducer.produce();
 
-        // Start producing topic messages
-        TopicProducer topicProducer = context.getBean(TopicProducer.class);
-        topicProducer.produce();
+        // Start publishing topic messages
+        TopicPublisher topicPublisher = context.getBean(TopicPublisher.class);
+        topicPublisher.produce();
     }
 
 }

@@ -8,19 +8,19 @@ import org.springframework.jms.core.JmsOperations;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TopicProducer {
+public class TopicPublisher {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(TopicProducer.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TopicPublisher.class);
 
     private JmsOperations jmsOperations;
 
     @Autowired
-    public TopicProducer(@Qualifier("jmsTemplateTopic") JmsOperations jmsOperations) {
+    public TopicPublisher(@Qualifier("jmsTemplateTopic") JmsOperations jmsOperations) {
         this.jmsOperations = jmsOperations;
     }
 
     public void produce() throws InterruptedException {
-        LOGGER.info("Producing 10 topic messages...");
+        LOGGER.info("Publishing 10 messages...");
         for (int i = 1; i <= 10; i++) {
             LOGGER.info("Sending message: {}", i);
             jmsOperations.convertAndSend("Message topic: " + i);

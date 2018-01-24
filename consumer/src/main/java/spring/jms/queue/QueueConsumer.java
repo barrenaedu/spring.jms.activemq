@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-public class QueueReceiver implements MessageListener {
-    private final static Logger LOGGER = LoggerFactory.getLogger(QueueReceiver.class);
+public class QueueConsumer implements MessageListener {
+    private final static Logger LOGGER = LoggerFactory.getLogger(QueueConsumer.class);
 
     @Override
     public void onMessage(Message message) {

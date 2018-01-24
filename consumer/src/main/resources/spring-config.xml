@@ -23,27 +23,27 @@
     </bean>
 
     <!-- JMS Queue listener configuration -->
-    <bean id="queueMessageReceiver" class="spring.jms.queue.QueueReceiver"/>
+    <bean id="queueConsumer" class="spring.jms.queue.QueueConsumer"/>
 
     <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer">
         <property name="connectionFactory" ref="connectionFactory"/>
         <property name="destinationName" value="${jms.queue.name}"/>
-        <property name="messageListener" ref="queueMessageReceiver"/>
+        <property name="messageListener" ref="queueConsumer"/>
         <!-- Queue mode -->
         <property name="pubSubDomain" value="false"/>
     </bean>
 
     <!-- JMS Topic listener configuration -->
-    <bean id="topicMessageReceiver" class="spring.jms.topic.TopicReceiver"/>
+    <bean id="topicSubscriber" class="spring.jms.topic.TopicSubscriber"/>
 
     <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer">
         <property name="connectionFactory" ref="connectionFactory"/>
         <property name="destinationName" value="${jms.topic.name}"/>
-        <property name="messageListener" ref="topicMessageReceiver"/>
+        <property name="messageListener" ref="topicSubscriber"/>
         <property name="concurrentConsumers" value="1"/>
         <!-- Topic mode -->
         <property name="pubSubDomain" value="true"/>
-        <!-- Durable topic -->
+        <!-- Durable topic (In case ActiveMQ is restarted) -->
         <property name="subscriptionDurable" value="true"/>
         <property name="clientId" value="${jms.topic.client-id}"/>
         <property name="durableSubscriptionName" value="${jms.topic.subscription-name}"/>
